@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Enums/EInteractableFinder.h"
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
+
+enum class EInteractableFinder : uint8;
 
 UCLASS()
 class PROJECTPERSIA_API APlayerCharacter : public ACharacter

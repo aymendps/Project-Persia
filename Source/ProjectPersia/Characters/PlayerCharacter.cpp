@@ -2,7 +2,9 @@
 
 
 #include "PlayerCharacter.h"
-#include "Interfaces/Interactable.h"
+#include "ProjectPersia/Interfaces/Interactable.h"
+#include "ProjectPersia/Enums/EInteractableFinder.h"
+
 
 // Sets default values
 APlayerCharacter::APlayerCharacter()

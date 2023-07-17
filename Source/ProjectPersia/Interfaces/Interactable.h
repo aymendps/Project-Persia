@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProjectPersia/PlayerCharacter.h"
 #include "UObject/Interface.h"
 #include "Interactable.generated.h"
 
@@ -15,7 +14,7 @@ class UInteractable : public UInterface
 };
 
 /**
- * 
+ * Interface for interactable actors. They execute their own logic when interacted with.
  */
 class PROJECTPERSIA_API IInteractable
 {
@@ -24,5 +23,5 @@ class PROJECTPERSIA_API IInteractable
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Interactable")
-	void Interact(APlayerCharacter* PlayerCharacter);
+	void Interact(class APlayerCharacter* PlayerCharacter);
 };

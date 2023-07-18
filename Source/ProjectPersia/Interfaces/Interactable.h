@@ -22,6 +22,10 @@ class PROJECTPERSIA_API IInteractable
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	/**
+	 * Executes the interactable actor's logic
+	 * @param PlayerCharacter The player character that is interacting with the actor
+	 */
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="Interactable")
 	void Interact(class APlayerCharacter* PlayerCharacter);
 };

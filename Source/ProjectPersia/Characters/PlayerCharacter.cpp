@@ -30,27 +30,24 @@ void APlayerCharacter::Tick(float DeltaTime)
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 AActor* APlayerCharacter::FindInteractable(EInteractableFinder& InteractableFinder)
 {
 	TArray<AActor*> OverlappingActors;
 	GetOverlappingActors(OverlappingActors);
-	
-	if (OverlappingActors.Num() > 0)
+
+	// Iterate and return the first one that implements the Interactable interface.
+	for (int i=0; i<OverlappingActors.Num(); i++)
 	{
-		if(OverlappingActors[0]->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+		if(OverlappingActors[i]->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
 		{
 			InteractableFinder = EInteractableFinder::Found;
-			return OverlappingActors[0];
+			return OverlappingActors[i];
 		}
-		
-		InteractableFinder = EInteractableFinder::NotFound;
-		return nullptr;
-		
 	}
-	
+
+	// If we get here, we didn't find any interactable actors.
 	InteractableFinder = EInteractableFinder::NotFound;
 	return nullptr;
 }

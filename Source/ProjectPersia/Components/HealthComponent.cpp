@@ -9,7 +9,7 @@ UHealthComponent::UHealthComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
+	
 	CurrentHealth = MaxHealth;
 }
 
@@ -19,6 +19,7 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Bind the OnDamageTaken function to the OnTakeAnyDamage event.
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::OnDamageTaken);
 }
 
@@ -26,13 +27,15 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
 	AController* Instigator, AActor* DamageCauser)
 {
+	// If damage is invalid or player is already dead, return.
 	if(Damage <= 0.0f || CurrentHealth <= 0.0f) return;
 
 	CurrentHealth -= Damage;
 
+	// If the player dies due to this damage, invoke the OnActorDied event.
 	if(CurrentHealth <= 0.0f)
 	{
-		OnActorDied.Broadcast();
+		OnActorDied.Broadcast(DamageType, Instigator, DamageCauser);
 	}
 }
 

@@ -2,6 +2,7 @@
 
 
 #include "FallingDamageComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UFallingDamageComponent::UFallingDamageComponent()
@@ -26,8 +27,12 @@ void UFallingDamageComponent::TickComponent(float DeltaTime, ELevelTick TickType
 	CurrentFallingSpeed = abs(GetOwner()->GetVelocity().Z);
 }
 
-void UFallingDamageComponent::PrintFallingSpeed() const
+/**
+ * Applies fall damage to the owner of this component using the SpeedToDamage curve.
+ */
+void UFallingDamageComponent::ApplyFallDamage()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Falling Speed: %f"), CurrentFallingSpeed));
+	UGameplayStatics::ApplyDamage(GetOwner(), SpeedToDamageCurve->GetFloatValue(CurrentFallingSpeed),
+		nullptr, nullptr, FallDamageType);
 }
 

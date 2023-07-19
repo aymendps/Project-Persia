@@ -23,18 +23,25 @@ protected:
 	virtual void BeginPlay() override;
 
 	// Whether to apply fall damage or not
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Falling Data")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Falling Damage Settings")
 	bool bApplyFallDamage = true;
 
 	// Used to get the amount of damage to apply based on the falling speed
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Falling Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Falling Damage Settings")
 	UCurveFloat* SpeedToDamageCurve;
 
-	UPROPERTY(BlueprintReadOnly, Category="Falling Data")
+	// The damage type to apply when falling
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Falling Damage Settings")
+	TSubclassOf<UDamageType> FallDamageType;
+
+	UPROPERTY(BlueprintReadOnly, Category="Falling Damage Data")
 	float CurrentFallingSpeed = 0.0f;
-	
-	UFUNCTION(BlueprintCallable, Category="Falling Data", meta=(DevelopmentOnly))
-	void PrintFallingSpeed() const;
+
+	/**
+	 * Applies fall damage to the owner of this component using the SpeedToDamage curve.
+	 */
+	UFUNCTION(BlueprintCallable)
+	void ApplyFallDamage();
 	
 public:	
 	// Called every frame

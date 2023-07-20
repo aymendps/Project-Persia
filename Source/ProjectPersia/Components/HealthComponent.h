@@ -9,6 +9,9 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnActorDiedDelegate, const UDamageType*, DamageType,
 	AController*, Instigator, AActor*, DamageCauser);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnActorDamagedDelegate, const UDamageType*, DamageType,
+	AController*, Instigator, AActor*, DamageCauser, float, RemainingHealth);
+
 /**
  * Component that handles actor's health and damage taken.
  */
@@ -25,10 +28,10 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(EditAnywhere, Category="Health")
+	UPROPERTY(EditAnywhere, Category="Health Stats")
 	float MaxHealth = 3.0f;
 	
-	UPROPERTY(BlueprintReadOnly, Category="Health")
+	UPROPERTY(BlueprintReadOnly, Category="Health Stats")
 	float CurrentHealth = 0.0f;
 
 private:
@@ -50,6 +53,12 @@ public:
 	/**
 	 * Event that is invoked when the actor dies, so when the health reaches 0 or below.
 	 */
-	UPROPERTY(BlueprintAssignable, Category="Health")
+	UPROPERTY(BlueprintAssignable, Category="Health Component")
 	FOnActorDiedDelegate OnActorDied;
+
+	/**
+	 * Event that is invoked when the actor takes damage.
+	 */
+	UPROPERTY(BlueprintAssignable, Category="Health Component")
+	FOnActorDamagedDelegate OnActorDamaged;
 };

@@ -31,8 +31,9 @@ void UHealthComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const U
 	if(Damage <= 0.0f || CurrentHealth <= 0.0f) return;
 
 	CurrentHealth -= Damage;
+	OnActorDamaged.Broadcast(DamageType, Instigator, DamageCauser, CurrentHealth);
 
-	// If the player dies due to this damage, invoke the OnActorDied event.
+	// If the player dies due to this damage
 	if(CurrentHealth <= 0.0f)
 	{
 		OnActorDied.Broadcast(DamageType, Instigator, DamageCauser);

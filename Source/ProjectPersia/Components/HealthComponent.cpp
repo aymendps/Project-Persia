@@ -43,12 +43,21 @@ void UHealthComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const U
 // Heals the actor by the given amount.
 void UHealthComponent::HealActor(const float HealAmount)
 {
-	// If heal is invalid or player is already dead, return.
-	if(HealAmount <= 0.0f || CurrentHealth <= 0.0f) return;
+	if(HealAmount <= 0.0f) return;
 
 	// Heal the player by the given amount, but don't exceed the max health.
 	CurrentHealth = CurrentHealth + HealAmount > MaxHealth ? MaxHealth : CurrentHealth + HealAmount;
 	OnActorHealed.Broadcast(HealAmount, CurrentHealth);
+}
+
+// Increases the actor's max health by the given amount.
+void UHealthComponent::GainMaxHealth(const float HealthGained)
+{
+	if(HealthGained <= 0.0f) return;
+	
+	MaxHealth += HealthGained;
+	CurrentHealth += HealthGained;
+	OnActorMaxHealthGained.Broadcast(HealthGained, MaxHealth);
 }
 
 // Called every frame

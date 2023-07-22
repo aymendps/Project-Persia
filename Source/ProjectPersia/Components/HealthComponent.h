@@ -13,6 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnActorDamagedDelegate, const UDa
 	AController*, Instigator, AActor*, DamageCauser, float, DamageAmount, float, RemainingHealth);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnActorHealedDelegate, float, HealAmount, float, NewHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnActorMaxHealthGainedDelegate, float, HealthGained, float, NewMaxHealth);
 	
 
 /**
@@ -43,7 +44,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(EditAnywhere, Category="Health Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Health Stats")
 	float MaxHealth = 3.0f;
 	
 	UPROPERTY(BlueprintReadOnly, Category="Health Stats")
@@ -54,7 +55,14 @@ protected:
 	 * @param HealAmount The amount to heal the actor by.
 	 */
 	UFUNCTION(BlueprintCallable, Category="Health Component")
-	void HealActor(float HealAmount);
+	void HealActor(const float HealAmount);
+
+	/**
+	 * Increases the actor's max health by the given amount.
+	 * @param HealthGained The amount to increase the actor's max health by.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Health Component")
+	void GainMaxHealth(const float HealthGained);
 	
 public:	
 	// Called every frame
@@ -77,4 +85,10 @@ public:
     */
 	UPROPERTY(BlueprintAssignable, Category="Health Component")
 	FOnActorHealedDelegate OnActorHealed;
+
+	/**
+	* Event that's invoked when the actor gains max health.
+	*/
+	UPROPERTY(BlueprintAssignable, Category="Health Component")
+	FOnActorMaxHealthGainedDelegate OnActorMaxHealthGained;
 };

@@ -23,7 +23,7 @@ void UHealthComponent::BeginPlay()
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::OnDamageTaken);
 }
 
-
+// Called when the actor takes damage.
 void UHealthComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
 	AController* Instigator, AActor* DamageCauser)
 {
@@ -31,12 +31,33 @@ void UHealthComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const U
 	if(Damage <= 0.0f || CurrentHealth <= 0.0f) return;
 
 	CurrentHealth -= Damage;
+	OnActorDamaged.Broadcast(DamageType, Instigator, DamageCauser, Damage, CurrentHealth);
 
-	// If the player dies due to this damage, invoke the OnActorDied event.
+	// If the player dies due to this damage
 	if(CurrentHealth <= 0.0f)
 	{
 		OnActorDied.Broadcast(DamageType, Instigator, DamageCauser);
 	}
+}
+
+// Heals the actor by the given amount.
+void UHealthComponent::HealActor(const float HealAmount)
+{
+	if(HealAmount <= 0.0f) return;
+
+	// Heal the player by the given amount, but don't exceed the max health.
+	CurrentHealth = CurrentHealth + HealAmount > MaxHealth ? MaxHealth : CurrentHealth + HealAmount;
+	OnActorHealed.Broadcast(HealAmount, CurrentHealth);
+}
+
+// Increases the actor's max health by the given amount.
+void UHealthComponent::GainMaxHealth(const float HealthGained)
+{
+	if(HealthGained <= 0.0f) return;
+	
+	MaxHealth += HealthGained;
+	CurrentHealth += HealthGained;
+	OnActorMaxHealthGained.Broadcast(HealthGained, MaxHealth);
 }
 
 // Called every frame

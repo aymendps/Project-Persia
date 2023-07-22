@@ -9,8 +9,11 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnActorDiedDelegate, const UDamageType*, DamageType,
 	AController*, Instigator, AActor*, DamageCauser);
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FOnActorDamagedDelegate, const UDamageType*, DamageType,
-	AController*, Instigator, AActor*, DamageCauser, float, RemainingHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FOnActorDamagedDelegate, const UDamageType*, DamageType,
+	AController*, Instigator, AActor*, DamageCauser, float, DamageAmount, float, RemainingHealth);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnActorHealedDelegate, float, HealAmount, float, NewHealth);
+	
 
 /**
  * Component that handles actor's health and damage taken.
@@ -24,6 +27,18 @@ public:
 	// Sets default values for this component's properties
 	UHealthComponent();
 
+private:
+	/**
+	 * Called when the actor takes damage.
+	 * @param DamagedActor The actor that took damage.
+	 * @param Damage The amount of damage taken.
+	 * @param DamageType The type of damage taken (physical, fall damage..).
+	 * @param Instigator The controller that caused the damage (enemy, player..).
+	 * @param DamageCauser The actor that caused the damage (spikes, sword..).
+	 */
+	UFUNCTION()
+	void OnDamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* Instigator, AActor* DamageCauser);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -34,31 +49,32 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="Health Stats")
 	float CurrentHealth = 0.0f;
 
-private:
 	/**
-	 * Called when the actor takes damage
-	 * @param DamagedActor The actor that took damage
-	 * @param Damage The amount of damage taken
-	 * @param DamageType The type of damage taken (physical, fall damage..)
-	 * @param Instigator The controller that caused the damage (enemy, player..)
-	 * @param DamageCauser The actor that caused the damage (spikes, sword..)
+	 * Heals the actor by the given amount.
+	 * @param HealAmount The amount to heal the actor by.
 	 */
-	UFUNCTION()
-	void OnDamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* Instigator, AActor* DamageCauser);
+	UFUNCTION(BlueprintCallable, Category="Health Component")
+	void HealActor(float HealAmount);
 	
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/**
-	 * Event that is invoked when the actor dies, so when the health reaches 0 or below.
+	 * Event that's invoked when the actor dies, so when the health reaches 0 or below.
 	 */
 	UPROPERTY(BlueprintAssignable, Category="Health Component")
 	FOnActorDiedDelegate OnActorDied;
 
 	/**
-	 * Event that is invoked when the actor takes damage.
+	 * Event that's invoked when the actor takes damage.
 	 */
 	UPROPERTY(BlueprintAssignable, Category="Health Component")
 	FOnActorDamagedDelegate OnActorDamaged;
+
+	/**
+    * Event that's invoked when the actor is healed.
+    */
+	UPROPERTY(BlueprintAssignable, Category="Health Component")
+	FOnActorHealedDelegate OnActorHealed;
 };

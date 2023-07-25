@@ -44,11 +44,11 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Health Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health Stats")
 	float MaxHealth = 3.0f;
 	
-	UPROPERTY(BlueprintReadOnly, Category="Health Stats")
-	float CurrentHealth = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health Stats")
+	float CurrentHealth = 3.0f;
 
 	/**
 	 * Heals the actor by the given amount.

@@ -3,11 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "MathUtility.generated.h"
 
 /**
- * 
+ * Class containing static math utility functions that can be used in blueprints
  */
 UCLASS()
 class PROJECTPERSIA_API UMathUtility : public UObject

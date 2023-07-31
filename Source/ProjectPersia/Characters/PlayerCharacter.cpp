@@ -32,23 +32,61 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+// Iterates through an array of actors and returns the first one that implements the Interactable interface.
+AActor* APlayerCharacter::FindInteractableInArray(TArray<AActor*> &Actors)
+{
+	// Iterate and return the first one that implements the Interactable interface.
+	for (int i=0; i<Actors.Num(); i++)
+	{
+		if(Actors[i]->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
+		{
+			return Actors[i];
+		}
+	}
+
+	// If we get here, we didn't find any interactable actors.
+	return nullptr;
+}
+
+// Attempts to find the first interactable actor that the player is overlapping with.
 AActor* APlayerCharacter::FindInteractable(EInteractableFinder& InteractableFinder)
 {
 	TArray<AActor*> OverlappingActors;
 	GetOverlappingActors(OverlappingActors);
 
-	// Iterate and return the first one that implements the Interactable interface.
-	for (int i=0; i<OverlappingActors.Num(); i++)
+	AActor* Interactable = FindInteractableInArray(OverlappingActors);
+	
+	if (Interactable == nullptr)
 	{
-		if(OverlappingActors[i]->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
-		{
-			InteractableFinder = EInteractableFinder::Found;
-			return OverlappingActors[i];
-		}
+		InteractableFinder = EInteractableFinder::NotFound;
 	}
+	else
+	{
+		InteractableFinder = EInteractableFinder::Found;
+	}
+	
+	return Interactable;
 
-	// If we get here, we didn't find any interactable actors.
-	InteractableFinder = EInteractableFinder::NotFound;
-	return nullptr;
+}
+
+// Attempts to find the first interactable actor that the player is overlapping with that is of the specified class.
+AActor* APlayerCharacter::FindInteractableByClass(EInteractableFinder& InteractableFinder,
+	TSubclassOf<AActor> InteractableClass)
+{
+	TArray<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors, InteractableClass);
+
+	AActor* Interactable = FindInteractableInArray(OverlappingActors);
+	
+	if (Interactable == nullptr)
+	{
+		InteractableFinder = EInteractableFinder::NotFound;
+	}
+	else
+	{
+		InteractableFinder = EInteractableFinder::Found;
+	}
+	
+	return Interactable;
 }
 

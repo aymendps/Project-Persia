@@ -21,6 +21,10 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	// Iterates through an array of actors and returns the first one that implements the Interactable interface.
+	UFUNCTION()
+	AActor* FindInteractableInArray(TArray<AActor*> &Actors);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -35,4 +39,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Interactable", Meta=(ExpandEnumAsExecs="InteractableFinder"))
 	AActor* FindInteractable(EInteractableFinder& InteractableFinder);
 
+	/**
+	 * Attempts to find the first interactable actor that the player is overlapping with that is of the specified class.
+	 * @return The first interactable actor that the player is overlapping with that is of the specified class.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Interactable", Meta=(ExpandEnumAsExecs="InteractableFinder"))
+	AActor* FindInteractableByClass(EInteractableFinder& InteractableFinder, TSubclassOf<AActor> InteractableClass);
 };

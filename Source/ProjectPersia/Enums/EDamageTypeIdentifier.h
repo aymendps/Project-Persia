@@ -9,4 +9,6 @@ enum class EDamageTypeIdentifier : uint8
 	Spikes,
 	// Damage caused by getting hit by a sword.
 	Sword,
+	// Damage caused by drinking poison.
+	Poison,
 };

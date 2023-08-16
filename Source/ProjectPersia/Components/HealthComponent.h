@@ -29,6 +29,10 @@ public:
 	UHealthComponent();
 
 private:
+	// If true, the actor can't take damage.
+	UPROPERTY()
+	bool bGodMode = false;
+	
 	/**
 	 * Called when the actor takes damage.
 	 * @param DamagedActor The actor that took damage.
@@ -63,6 +67,13 @@ protected:
 	 */
 	UFUNCTION(BlueprintCallable, Category="Health Component")
 	void GainMaxHealth(const float HealthGained);
+
+	/**
+	 * If set to true, the actor becomes invincible and can't take damage.
+	 * @param bNewGodMode The new god mode value.
+	 */
+	UFUNCTION(BlueprintCallable, Category="Health Component")
+	void SetGodMode(const bool bNewGodMode);
 	
 public:	
 	// Called every frame

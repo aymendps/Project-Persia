@@ -25,6 +25,9 @@ void UHealthComponent::BeginPlay()
 void UHealthComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
 	AController* Instigator, AActor* DamageCauser)
 {
+	// If the actor is in god mode, return.
+	if(bGodMode) return;
+	
 	// If damage is invalid or player is already dead, return.
 	if(Damage <= 0.0f || CurrentHealth <= 0.0f) return;
 
@@ -56,6 +59,13 @@ void UHealthComponent::GainMaxHealth(const float HealthGained)
 	MaxHealth += HealthGained;
 	CurrentHealth += HealthGained;
 	OnActorMaxHealthGained.Broadcast(HealthGained, MaxHealth);
+}
+
+// If set to true, the actor becomes invincible and can't take damage.
+void UHealthComponent::SetGodMode(const bool bNewGodMode)
+{
+	bGodMode = bNewGodMode;
+	UE_LOG(LogTemp, Warning, TEXT("God mode is now %s"), bGodMode ? TEXT("true") : TEXT("false"));
 }
 
 // Called every frame
